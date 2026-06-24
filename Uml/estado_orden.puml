@@ -1,0 +1,16 @@
+@startuml
+[*] --> PENDIENTE : Crear Nueva Orden
+
+PENDIENTE --> EN_PROCESO : Agregar/Modificar Resultados
+EN_PROCESO --> EN_PROCESO : Modificar Resultados
+EN_PROCESO --> FINALIZADA : Completar Todos los Resultados
+
+PENDIENTE --> FINALIZADA : Ingresar Resultados Directamente
+
+PENDIENTE --> ELIMINADA : Cancelar Orden (Soft Delete)
+EN_PROCESO --> ELIMINADA : Cancelar Orden (Soft Delete)
+FINALIZADA --> ELIMINADA : Cancelar Orden (Soft Delete)
+
+FINALIZADA --> [*]
+ELIMINADA --> [*]
+@enduml

@@ -1,0 +1,26 @@
+.main-container {
+    -fx-background-color: #f4f6f9;
+}
+
+.title-label {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.info-box {
+    -fx-background-color: #ffffff;
+    -fx-padding: 10px;
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+.info-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #34495e;
+}
+
+.table-view {
+    -fx-font-size: 14px;
+}

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane fx:id="mainPane" prefHeight="700.0" prefWidth="1000.0" stylesheets="@../styles/main.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.acculab.controllers.DashboardController">
+   <left>
+      <VBox prefWidth="250.0" spacing="10.0" style="-fx-background-color: #2c3e50;" BorderPane.alignment="CENTER">
+         <padding>
+            <Insets bottom="20.0" left="15.0" right="15.0" top="30.0" />
+         </padding>
+         <children>
+            <ImageView fitHeight="80.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/logo.jpeg" />
+               </image>
+            </ImageView>
+            <Label text="Panel de Control" style="-fx-text-fill: #bdc3c7; -fx-font-size: 14px;" />
+            
+            <VBox spacing="15.0" VBox.vgrow="ALWAYS">
+               <padding>
+                  <Insets top="40.0" />
+               </padding>
+               <children>
+                  <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#abrirModuloPacientes" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-alignment: BASELINE_LEFT; -fx-font-size: 15px; -fx-cursor: hand;" text="👥 Pacientes" />
+                  <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#abrirModuloOrdenes" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-alignment: BASELINE_LEFT; -fx-font-size: 15px; -fx-cursor: hand;" text="📋 Órdenes" />
+                  <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#abrirModuloLaboratorio" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-alignment: BASELINE_LEFT; -fx-font-size: 15px; -fx-cursor: hand;" text="🔬 Laboratorio" />
+                  <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#abrirModuloFinanciero" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-alignment: BASELINE_LEFT; -fx-font-size: 15px; -fx-cursor: hand;" text="💰 Caja / Financiero" />
+                  <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#abrirModuloPruebas" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-alignment: BASELINE_LEFT; -fx-font-size: 15px; -fx-cursor: hand;" text="⚙️ Catálogo Pruebas" />
+               </children>
+            </VBox>
+            
+            <VBox spacing="10.0">
+               <children>
+                  <Label fx:id="lblUsuarioActual" style="-fx-text-fill: #ecf0f1; -fx-font-size: 12px;" text="Usuario" wrapText="true" />
+                  <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#cerrarSesion" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="Cerrar Sesión" />
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+   </left>
+   <center>
+      <!-- El contenido dinámico se cargará aquí -->
+   </center>
+</BorderPane>

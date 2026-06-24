@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox prefHeight="700.0" prefWidth="750.0" spacing="20.0" stylesheets="@../styles/main.css" styleClass="main-container" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.acculab.controllers.FinancieroController">
+   <padding>
+      <Insets bottom="20.0" left="30.0" right="30.0" top="30.0" />
+   </padding>
+
+   <Label styleClass="title-label" text="Módulo Financiero / Caja" />
+
+   <HBox spacing="20.0" VBox.vgrow="ALWAYS">
+      <VBox HBox.hgrow="ALWAYS" spacing="10.0">
+         <Label text="Buscar Orden (ID o Paciente):" style="-fx-font-weight: bold; -fx-text-fill: #34495e;"/>
+         <TextField fx:id="txtBuscarOrden" promptText="Escriba para filtrar..." style="-fx-pref-height: 35px;" />
+         
+         <TableView fx:id="tableOrdenes" VBox.vgrow="ALWAYS">
+           <columns>
+             <TableColumn fx:id="colId" prefWidth="100.0" text="Orden N°" />
+             <TableColumn fx:id="colPaciente" prefWidth="180.0" text="Paciente" />
+             <TableColumn fx:id="colCosto" prefWidth="90.0" text="Costo Total" />
+             <TableColumn fx:id="colAbonado" prefWidth="90.0" text="Abonado" />
+             <TableColumn fx:id="colSaldo" prefWidth="90.0" text="Saldo Deudor" />
+           </columns>
+         </TableView>
+      </VBox>
+
+      <VBox prefWidth="300.0" spacing="20.0" styleClass="info-box" style="-fx-background-color: #ecf0f1;">
+         <Label style="-fx-font-weight: bold; -fx-font-size: 16px; -fx-text-fill: #2c3e50;" text="Detalles de Pago" />
+         
+         <Label fx:id="lblOrdenSeleccionada" text="Seleccione una orden de la tabla" style="-fx-font-style: italic; -fx-text-fill: #7f8c8d;" wrapText="true" />
+         
+         <VBox spacing="10.0" style="-fx-background-color: white; -fx-padding: 15px; -fx-background-radius: 5px;">
+            <HBox>
+                <Label text="Costo Total:" style="-fx-font-weight: bold;" />
+                <javafx.scene.layout.Region HBox.hgrow="ALWAYS" />
+                <Label fx:id="lblCostoTotal" text="\$0.00" />
+            </HBox>
+            <HBox>
+                <Label text="Abonado:" style="-fx-font-weight: bold; -fx-text-fill: #2ecc71;" />
+                <javafx.scene.layout.Region HBox.hgrow="ALWAYS" />
+                <Label fx:id="lblAbonado" text="\$0.00" style="-fx-text-fill: #2ecc71;" />
+            </HBox>
+            <HBox style="-fx-border-color: transparent transparent #bdc3c7 transparent; -fx-border-width: 0 0 1 0; -fx-padding: 0 0 5 0;">
+                <Label text="Saldo Deudor:" style="-fx-font-weight: bold; -fx-text-fill: #e74c3c;" />
+                <javafx.scene.layout.Region HBox.hgrow="ALWAYS" />
+                <Label fx:id="lblSaldoDeudor" text="\$0.00" style="-fx-font-weight: bold; -fx-text-fill: #e74c3c;" />
+            </HBox>
+         </VBox>
+         
+         <VBox spacing="5.0">
+            <Label styleClass="info-label" text="Ingresar Nuevo Abono ($):" />
+            <TextField fx:id="txtNuevoAbono" promptText="0.00" />
+         </VBox>
+         
+         <Button mnemonicParsing="false" onAction="#registrarAbono" text="Registrar Pago" maxWidth="Infinity" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 10px; -fx-cursor: hand;" />
+      </VBox>
+   </HBox>
+</VBox>

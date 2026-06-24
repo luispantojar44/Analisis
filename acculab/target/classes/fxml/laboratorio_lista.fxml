@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Button?>
+
+<VBox prefHeight="700.0" prefWidth="750.0" spacing="20.0" stylesheets="@../styles/main.css" styleClass="main-container" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.acculab.controllers.LaboratorioListaController">
+   <padding>
+      <Insets bottom="20.0" left="30.0" right="30.0" top="30.0" />
+   </padding>
+
+   <Label styleClass="title-label" text="Laboratorio Clínico (Órdenes Activas)" />
+   <Label text="Haga doble clic sobre una orden para registrar los resultados." style="-fx-text-fill: #7f8c8d; -fx-font-style: italic;" />
+
+   <HBox spacing="20.0" alignment="CENTER_LEFT">
+      <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+         <Label text="Buscar Orden (Paciente o ID):" style="-fx-font-weight: bold; -fx-text-fill: #34495e;"/>
+         <TextField fx:id="txtBuscarOrden" promptText="Escriba para filtrar..." style="-fx-pref-height: 35px;" />
+      </VBox>
+      <Button mnemonicParsing="false" onAction="#generarReportePDF" text="Generar Reporte PDF" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 10px;" />
+      <Button mnemonicParsing="false" onAction="#cambiarEstadoOrden" text="🔄 Cambiar Estado" style="-fx-background-color: #f39c12; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 10px;" />
+      <Button mnemonicParsing="false" onAction="#eliminarOrden" text="🗑️ Eliminar Orden" style="-fx-background-color: #c0392b; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 10px;" />
+   </HBox>
+
+   <TableView fx:id="tableOrdenes" VBox.vgrow="ALWAYS">
+     <columns>
+       <TableColumn fx:id="colId" prefWidth="100.0" text="ID Orden" />
+       <TableColumn fx:id="colFecha" prefWidth="140.0" text="Fecha Creación" />
+       <TableColumn fx:id="colPaciente" prefWidth="210.0" text="Paciente" />
+       <TableColumn fx:id="colMedico" prefWidth="180.0" text="Médico" />
+       <TableColumn fx:id="colEstado" prefWidth="100.0" text="Estado" />
+     </columns>
+   </TableView>
+
+</VBox>

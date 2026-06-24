@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox prefHeight="700.0" prefWidth="750.0" spacing="20.0" stylesheets="@../styles/main.css" styleClass="main-container" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.acculab.controllers.PruebasController">
+   <padding>
+      <Insets bottom="20.0" left="30.0" right="30.0" top="30.0" />
+   </padding>
+
+   <Label styleClass="title-label" text="Catálogo: Pruebas y Perfiles" />
+
+   <TabPane VBox.vgrow="ALWAYS" tabClosingPolicy="UNAVAILABLE">
+      <!-- PESTAÑA PRUEBAS -->
+      <Tab text="Pruebas Individuales">
+         <VBox spacing="15.0">
+            <padding><Insets top="15.0" /></padding>
+            <HBox spacing="20.0">
+               <VBox prefWidth="350.0" spacing="15.0" styleClass="info-box">
+                  <Label style="-fx-font-weight: bold; -fx-font-size: 16px; -fx-text-fill: #2c3e50;" text="Detalles de la Prueba" />
+                  
+                  <VBox spacing="5.0">
+                     <Label styleClass="info-label" text="Nombre de la Prueba:" />
+                     <TextField fx:id="txtNombre" />
+                  </VBox>
+                  
+                  <VBox spacing="5.0">
+                     <Label styleClass="info-label" text="Unidad de Medida (ej. mg/dL):" />
+                     <TextField fx:id="txtUnidad" />
+                  </VBox>
+                  
+                  <Label style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #2980b9;" text="Rango Masculino:" />
+                  <HBox spacing="10.0">
+                     <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                        <Label text="Mínimo:" />
+                        <TextField fx:id="txtMinM" />
+                     </VBox>
+                     <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                        <Label text="Máximo:" />
+                        <TextField fx:id="txtMaxM" />
+                     </VBox>
+                  </HBox>
+
+                  <Label style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #8e44ad;" text="Rango Femenino:" />
+                  <HBox spacing="10.0">
+                     <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                        <Label text="Mínimo:" />
+                        <TextField fx:id="txtMinF" />
+                     </VBox>
+                     <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                        <Label text="Máximo:" />
+                        <TextField fx:id="txtMaxF" />
+                     </VBox>
+                  </HBox>
+
+                  <VBox spacing="5.0">
+                     <Label styleClass="info-label" text="Precio ($):" />
+                     <TextField fx:id="txtPrecio" />
+                  </VBox>
+                  
+                  <HBox spacing="10.0" alignment="CENTER_RIGHT">
+                     <Button mnemonicParsing="false" onAction="#limpiarFormulario" text="Limpiar" style="-fx-background-color: #bdc3c7; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;"/>
+                     <Button mnemonicParsing="false" onAction="#eliminarPrueba" text="Eliminar" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" />
+                     <Button mnemonicParsing="false" onAction="#guardarPrueba" text="Guardar" style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" />
+                  </HBox>
+               </VBox>
+               
+               <VBox HBox.hgrow="ALWAYS" spacing="10.0">
+                  <Label text="Buscador" style="-fx-font-weight: bold; -fx-text-fill: #34495e;"/>
+                  <TextField fx:id="txtBuscar" promptText="Buscar prueba..." style="-fx-pref-height: 35px;" />
+                  <Label text="* Seleccione una prueba para editar o eliminar" style="-fx-font-size: 11px; -fx-text-fill: #7f8c8d;"/>
+               </VBox>
+            </HBox>
+
+            <TableView fx:id="tablePruebas" VBox.vgrow="ALWAYS">
+              <columns>
+                <TableColumn fx:id="colNombre" prefWidth="200.0" text="Nombre de la Prueba" />
+                <TableColumn fx:id="colUnidad" prefWidth="80.0" text="Unidad" />
+                <TableColumn fx:id="colRefM" prefWidth="120.0" text="Rango Masculino" />
+                <TableColumn fx:id="colRefF" prefWidth="120.0" text="Rango Femenino" />
+                <TableColumn fx:id="colPrecio" prefWidth="100.0" text="Precio" />
+              </columns>
+            </TableView>
+         </VBox>
+      </Tab>
+
+      <!-- PESTAÑA PERFILES -->
+      <Tab text="Perfiles Compuestos">
+         <VBox spacing="15.0">
+            <padding><Insets top="15.0" /></padding>
+            <HBox spacing="20.0" VBox.vgrow="ALWAYS">
+               <VBox prefWidth="350.0" spacing="15.0" styleClass="info-box">
+                  <Label style="-fx-font-weight: bold; -fx-font-size: 16px; -fx-text-fill: #2c3e50;" text="Crear / Editar Perfil" />
+                  
+                  <VBox spacing="5.0">
+                     <Label styleClass="info-label" text="Nombre del Perfil:" />
+                     <TextField fx:id="txtNombrePerfil" promptText="Ej. Perfil Lipídico" />
+                  </VBox>
+                  
+                  <VBox spacing="5.0">
+                     <Label styleClass="info-label" text="Añadir Prueba al Perfil:" />
+                     <HBox spacing="10.0">
+                        <ComboBox fx:id="cbPruebasParaPerfil" promptText="Seleccionar..." HBox.hgrow="ALWAYS" maxWidth="Infinity" />
+                        <Button mnemonicParsing="false" onAction="#agregarPruebaAPerfil" text="+" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" />
+                     </HBox>
+                  </VBox>
+
+                  <Label text="Pruebas en este Perfil:" style="-fx-font-weight: bold; -fx-text-fill: #7f8c8d;" />
+                  <TableView fx:id="tablePruebasEnPerfil" prefHeight="200.0">
+                     <columns>
+                        <TableColumn fx:id="colNombrePruebaPerfil" prefWidth="280.0" text="Nombre de la Prueba" />
+                     </columns>
+                  </TableView>
+
+                  <Button mnemonicParsing="false" onAction="#quitarPruebaDePerfil" text="Quitar Prueba Seleccionada" style="-fx-background-color: #e67e22; -fx-text-fill: white; -fx-cursor: hand;" />
+                  
+                  <HBox spacing="10.0" alignment="CENTER_RIGHT">
+                     <Button mnemonicParsing="false" onAction="#limpiarFormularioPerfil" text="Limpiar" style="-fx-background-color: #bdc3c7; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;"/>
+                     <Button mnemonicParsing="false" onAction="#eliminarPerfil" text="Eliminar" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" />
+                     <Button mnemonicParsing="false" onAction="#guardarPerfil" text="Guardar" style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" />
+                  </HBox>
+               </VBox>
+               
+               <VBox HBox.hgrow="ALWAYS" spacing="10.0">
+                  <Label text="Perfiles Existentes" style="-fx-font-weight: bold; -fx-text-fill: #34495e;"/>
+                  <TableView fx:id="tablePerfiles" VBox.vgrow="ALWAYS">
+                    <columns>
+                      <TableColumn fx:id="colNombrePerfil" prefWidth="300.0" text="Nombre del Perfil" />
+                    </columns>
+                  </TableView>
+               </VBox>
+            </HBox>
+         </VBox>
+      </Tab>
+   </TabPane>
+</VBox>

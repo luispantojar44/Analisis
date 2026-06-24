@@ -1,0 +1,27 @@
+@startuml
+package "Presentación (JavaFX)" {
+  [Views (.fxml)] as views
+  [Controllers] as controllers
+}
+
+package "Lógica de Negocio" {
+  [Services] as services
+  [Models] as models
+}
+
+package "Acceso a Datos" {
+  [DAOs] as daos
+}
+
+database "Almacenamiento Local" {
+  [Archivos Binarios (.dat)] as files
+}
+
+views <..> controllers : Enlace de Datos/Eventos
+controllers --> services : Usa
+controllers --> models : Usa
+services --> daos : Invoca
+daos --> files : Lee/Escribe
+services --> models : Transforma/Usa
+daos --> models : Mapea
+@enduml
