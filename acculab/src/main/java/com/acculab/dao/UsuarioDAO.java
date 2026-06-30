@@ -6,7 +6,7 @@ public class UsuarioDAO extends GenericBinaryDAO<Usuario, String> {
     
     // Asume que los archivos de datos se guardarán en una carpeta "data"
     public UsuarioDAO() {
-        super("data/usuarios.dat", Usuario::getId);
+        super("data/usuarios.bin", Usuario::getId);
     }
 
     public Usuario findByUsername(String username) {

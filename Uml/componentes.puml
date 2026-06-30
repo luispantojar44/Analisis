@@ -1,27 +1,27 @@
 @startuml
-package "Presentación (JavaFX)" {
-  [Views (.fxml)] as views
-  [Controllers] as controllers
+package "Capa de Presentación (JavaFX)" {
+  [Controladores (Controllers)] as C
+  [Vistas FXML] as V
 }
 
-package "Lógica de Negocio" {
-  [Services] as services
-  [Models] as models
+package "Capa de Lógica de Negocio" {
+  [Servicios (Services)] as S
+  [Modelos (Entidades)] as M
 }
 
-package "Acceso a Datos" {
-  [DAOs] as daos
+package "Capa de Persistencia" {
+  [DAO Genérico] as GDAO
+  [DAOs Específicos] as DAO
 }
 
-database "Almacenamiento Local" {
-  [Archivos Binarios (.dat)] as files
-}
+database "Archivos Binarios (.bin)" as DB
 
-views <..> controllers : Enlace de Datos/Eventos
-controllers --> services : Usa
-controllers --> models : Usa
-services --> daos : Invoca
-daos --> files : Lee/Escribe
-services --> models : Transforma/Usa
-daos --> models : Mapea
+V <..> C : Vinculación de Datos (Bindings)
+C --> S : Invoca Lógica Compleja
+C --> DAO : Operaciones CRUD simples
+S --> DAO : Actualizaciones Transaccionales
+DAO --> GDAO : Hereda Funciones
+GDAO --> DB : Serialización I/O
+C ..> M : Usa Entidades
+S ..> M : Manipula Entidades
 @enduml

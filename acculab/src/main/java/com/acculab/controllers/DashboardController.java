@@ -45,6 +45,16 @@ public class DashboardController {
     private void abrirModuloPruebas(ActionEvent event) {
         cargarVistaCentral("/fxml/pruebas.fxml");
     }
+    
+    @FXML
+    private void abrirModuloMedicos(ActionEvent event) {
+        cargarVistaCentral("/fxml/medicos.fxml");
+    }
+    
+    @FXML
+    private void abrirModuloUsuarios(ActionEvent event) {
+        cargarVistaCentral("/fxml/usuarios.fxml");
+    }
 
     @FXML
     private void abrirModuloFinanciero(ActionEvent event) {

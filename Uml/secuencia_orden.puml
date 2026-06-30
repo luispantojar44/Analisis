@@ -1,33 +1,54 @@
 @startuml
-actor Usuario
-boundary "OrdenesController" as controller
-control "OrdenService" as service
-entity "OrdenDAO" as dao
-database "ordenes.dat" as db
+title Diagrama de Secuencia: Generar Orden de Laboratorio
 
-Usuario -> controller: Click "Guardar Orden"
-activate controller
+actor Recepcionista
+participant ":UIOrdenes" as UI
+participant ":OrdenService" as OS
+participant ":PruebaService" as PS
+participant ":OrdenDAO" as OD
+participant ":BaseDatos" as BD
 
-controller -> controller: Validar campos e ingresos
-controller -> service: procesarNuevaOrden(orden)
-activate service
+Recepcionista -> UI : 1: clickNuevaOrden(paciente)
+activate UI
 
-service -> service: Calcular totales (Pruebas/Perfiles)
-service -> dao: save(orden)
-activate dao
+UI -> OS : 2: crearOrden(idPaciente)
+activate OS
 
-dao -> db: Escribir objeto serializado
-activate db
-db --> dao: Confirmación de escritura
-deactivate db
+OS -> PS : 3: listarPruebas()
+activate PS
+PS --> OS : 4: List<Prueba>
+deactivate PS
 
-dao --> service: Orden Guardada
-deactivate dao
+OS --> UI : 5: seleccionarPruebas(ids)
+deactivate OS
 
-service --> controller: Operación Exitosa
-deactivate service
+opt es perfil compuesto
+    note over UI, OS
+    expandirPerfil() -> autoselecciona
+    todos los ítems del perfil
+    end note
+end
 
-controller -> Usuario: Muestra Alerta de Éxito
-controller -> controller: Actualizar Tabla
-deactivate controller
+Recepcionista -> UI : 6: ingresarCosto(monto)
+
+UI -> OS : 7: guardar(orden) [estado=PENDIENTE, ordenPruebas fijo]
+activate OS
+
+OS -> OD : 8: INSERT orden + detalle
+activate OD
+
+OD -> BD : 8: INSERT orden + detalle
+activate BD
+BD --> OD : 9: idOrden
+deactivate BD
+
+OD --> OS : 10: ordenGuardada
+deactivate OD
+
+OS --> UI : 11: confirmación + No. orden
+deactivate OS
+
+UI --> Recepcionista : 12: muestra "Orden creada"
+deactivate UI
+
 @enduml

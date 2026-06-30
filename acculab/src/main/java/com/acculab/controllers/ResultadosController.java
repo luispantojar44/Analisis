@@ -3,6 +3,8 @@ package com.acculab.controllers;
 import com.acculab.models.Orden;
 import com.acculab.models.Paciente;
 import com.acculab.models.Prueba;
+import com.acculab.models.Resultado;
+import com.acculab.models.EstadoOrden;
 import com.acculab.services.OrdenService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -38,8 +40,18 @@ public class ResultadosController {
 
     private void cargarPruebas() {
         datosTabla = FXCollections.observableArrayList();
-        for (Prueba prueba : ordenActual.getPruebas()) {
-            datosTabla.add(new PruebaWrapper(prueba, ordenActual.getPaciente()));
+        
+        if (ordenActual.getResultados() != null && !ordenActual.getResultados().isEmpty()) {
+            for (Resultado r : ordenActual.getResultados()) {
+                PruebaWrapper pw = new PruebaWrapper(r.getPrueba(), ordenActual.getPaciente());
+                pw.setValor(String.valueOf(r.getValor()));
+                pw.alertaProperty.set(r.getAlerta());
+                datosTabla.add(pw);
+            }
+        } else {
+            for (Prueba prueba : ordenActual.getPruebas()) {
+                datosTabla.add(new PruebaWrapper(prueba, ordenActual.getPaciente()));
+            }
         }
         
         colPrueba.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().prueba.getNombre()));
@@ -50,7 +62,7 @@ public class ResultadosController {
         colResultado.setOnEditCommit(event -> {
             PruebaWrapper wrapper = event.getRowValue();
             wrapper.setValor(event.getNewValue());
-            evaluarRango(wrapper);
+            // No auto-guardar aquí, el guardado será en bloque según secuencia.
         });
 
         colAlerta.setCellValueFactory(cellData -> cellData.getValue().alertaProperty);
@@ -80,38 +92,34 @@ public class ResultadosController {
         tableResultados.setEditable(true);
     }
 
-    private void evaluarRango(PruebaWrapper wrapper) {
-        try {
-            double valor = Double.parseDouble(wrapper.valorProperty.get());
-            boolean fueraDeRango = false;
-            Prueba p = wrapper.prueba;
-            
-            if (ordenActual.getPaciente().getSexo() == Paciente.Sexo.MASCULINO) {
-                if (valor < p.getRefMinMasculino() || valor > p.getRefMaxMasculino()) fueraDeRango = true;
-            } else {
-                if (valor < p.getRefMinFemenino() || valor > p.getRefMaxFemenino()) fueraDeRango = true;
-            }
-            
-            if (fueraDeRango) {
-                wrapper.alertaProperty.set("FUERA DE RANGO");
-            } else {
-                wrapper.alertaProperty.set("NORMAL");
-            }
-            
-            // Guardar a través del servicio
-            ordenService.capturarResultado(ordenActual, p, valor, ordenActual.getPaciente());
-            
-        } catch (NumberFormatException e) {
-            wrapper.alertaProperty.set("VALOR INVÁLIDO");
-        }
-    }
+    // evaluarRango eliminado por ser manejado por Resultado
 
     @FXML
     private void guardarResultados(ActionEvent event) {
         try {
-            mostrarAlertaExito("Resultados guardados correctamente.");
-            javafx.stage.Stage stage = (javafx.stage.Stage) tableResultados.getScene().getWindow();
-            stage.close();
+            // Limpiar resultados anteriores
+            ordenActual.getResultados().clear();
+            
+            for (PruebaWrapper w : datosTabla) {
+                if (!w.valorProperty.get().isEmpty()) {
+                    double valor = Double.parseDouble(w.valorProperty.get());
+                    Resultado r = new Resultado(w.prueba, valor);
+                    r.validarRango(ordenActual.getPaciente());
+                    ordenActual.agregarResultado(r);
+                    w.alertaProperty.set(r.getAlerta());
+                }
+            }
+            
+            ordenActual.setEstado(EstadoOrden.FINALIZADA);
+            
+            // Guardar TODO a través del servicio
+            ordenService.actualizarOrden(ordenActual);
+
+            tableResultados.refresh();
+            mostrarAlertaExito("Resultados guardados y validados correctamente.");
+            
+        } catch (NumberFormatException e) {
+            mostrarAlertaError("Error: Asegúrese de ingresar solo números en los resultados.");
         } catch (Exception e) {
             e.printStackTrace();
             mostrarAlertaError("Error al guardar los resultados: " + e.getMessage());

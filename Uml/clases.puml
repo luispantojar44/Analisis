@@ -1,71 +1,59 @@
 @startuml
-class Usuario {
-  - id: String
-  - username: String
-  - passwordHash: String
-  - rol: String
-  - activo: boolean
+class Paciente {
+  - String id
+  - String nombres
+  - String apellidos
+  - String telefono
+  - String correo
+  - LocalDate fechaNacimiento
+  - Sexo sexo
 }
 
-class Paciente {
-  - id: String
-  - nombres: String
-  - apellidos: String
-  - fechaNacimiento: LocalDate
-  - sexo: Sexo
-  - telefono: String
-  - correo: String
-  - eliminado: boolean
+class Medico {
+  - String id
+  - String nombres
+  - String apellidos
+  - String especialidad
 }
 
 class Prueba {
-  - id: String
-  - nombre: String
-  - precio: double
-  - eliminado: boolean
+  - String id (Codigo)
+  - String nombre
+  - double precio
+  - double refMin
+  - double refMax
 }
 
 class Perfil {
-  - id: String
-  - nombre: String
-  - precio: double
-  - pruebas: List<Prueba>
-  - eliminado: boolean
+  - String id
+  - String nombre
+  - List<Prueba> pruebas
 }
 
 class Orden {
-  - id: String
-  - paciente: Paciente
-  - pruebas: List<Prueba>
-  - perfiles: List<Perfil>
-  - estado: EstadoOrden
-  - resultados: List<Resultado>
-  - fechaCreacion: LocalDateTime
-  - subtotal: double
-  - descuento: double
-  - total: double
-  - eliminado: boolean
+  - String id
+  - EstadoOrden estado
+  - double costoTotal
+  - double abono
+}
+
+class Abono {
+  - String id
+  - double monto
+  - LocalDateTime fecha
 }
 
 class Resultado {
-  - prueba: Prueba
-  - valor: String
-  - notas: String
-  - fechaRegistro: LocalDateTime
+  - double valor
+  - String alerta
+  + void validarRango()
 }
 
-enum EstadoOrden {
-  PENDIENTE
-  EN_PROCESO
-  FINALIZADA
-  ELIMINADA
-}
-
+Orden "1" *-- "many" Abono : contiene
 Orden "1" *-- "many" Resultado : contiene
-Orden "many" -- "1" Paciente : pertenece a
-Orden "many" -- "many" Prueba : incluye
-Orden "many" -- "many" Perfil : incluye
-Resultado "many" -- "1" Prueba : corresponde a
-Orden "1" --> "1" EstadoOrden : tiene
-Perfil "many" -- "many" Prueba : agrupa
+Orden "1" o-- "many" Prueba : solicita
+Orden "many" --> "1" Paciente : pertenece a
+Orden "many" --> "1" Medico : prescrita por
+Resultado "many" --> "1" Prueba : corresponde a
+Perfil "1" o-- "many" Prueba : agrupa
 @enduml

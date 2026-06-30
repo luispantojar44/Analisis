@@ -1,0 +1,50 @@
+@startuml
+title Diagrama de Secuencia: Registrar Abono y Enviar Resultados
+
+actor Recepcionista
+participant ":UIOrdenes" as UI
+participant ":PagoService" as PS
+participant ":OrdenService" as OS
+participant ":PagoDAO" as PD
+participant ":EnvioService" as ES
+participant "SMTP/WhatsApp" as SW
+
+Recepcionista -> UI : 1: registrarAbono(idOrden, monto)
+activate UI
+
+UI -> PS : 2: registrarAbono(idOrden, monto)
+activate PS
+
+PS -> PD : 3: INSERT pago
+activate PD
+PD --> PS : 4: idPago
+deactivate PD
+
+PS -> OS : 5: actualizarSaldo(idOrden)
+activate OS
+note over OS
+saldo = total - sum(abonos)
+if saldo <= 0 -> marcar PAGADA
+end note
+OS --> PS : 6: nuevoSaldo
+deactivate OS
+
+PS --> UI : 7: comprobante + saldo
+deactivate PS
+
+opt orden está PAGADA y resultado disponible
+    Recepcionista -> UI : 8: clickEnviarResultados()
+    UI -> ES : 9: enviar(idOrden, canal, destino, pdf)
+    activate ES
+    ES -> SW : 10: enviarMensaje(adjunto)
+    activate SW
+    SW --> ES : 11: confirmación
+    deactivate SW
+    ES --> UI : 
+    deactivate ES
+end
+
+UI --> Recepcionista : 12: "Enviado correctamente"
+deactivate UI
+
+@enduml

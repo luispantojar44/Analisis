@@ -1,0 +1,81 @@
+@startuml
+left to right direction
+
+actor "Recepcionista" as Rec
+actor "Laboratorista" as Lab
+actor "Administrador" as Adm
+actor "Médico\nSolicitante" as Med
+
+rectangle "Sistema AccuLab" {
+  
+  ' Modulos azules
+  usecase "Gestionar Pacientes" as UC_Pac
+  usecase "Generar Orden Lab." as UC_Ord
+  usecase "Buscar/Filtrar" as UC_Bus
+  usecase "Registrar Abono" as UC_Abo
+  usecase "Cambiar Estado Orden" as UC_Est
+  
+  ' Modulos naranjas
+  usecase "Ingresar Resultados" as UC_Res
+  usecase "Validar Resultados" as UC_Val
+  usecase "Mantener Pruebas" as UC_Pru
+  usecase "Mantener Rangos Ref." as UC_Ran
+  usecase "Selección en Bloque (Perfiles)" as UC_Per
+  usecase "Filtrar por Rango Fechas" as UC_Fec
+  usecase "Consultar Historial" as UC_His
+  usecase "Consultar Reg. Financiero" as UC_Fin
+  
+  ' Modulos verdes
+  usecase "Imprimir Reporte PDF" as UC_Imp
+  usecase "Enviar Resultados" as UC_Env
+  
+  ' Modulos morados
+  usecase "Gestionar Usuarios" as UC_Usu
+  usecase "Gestionar Médicos" as UC_Med
+  usecase "Cambiar Credenciales" as UC_Cre
+  usecase "Auditar Eliminadas" as UC_Aud
+  
+  ' Modulo rojo
+  usecase "Autenticar Usuario" as UC_Aut
+}
+
+' Relaciones Recepcionista
+Rec -- UC_Pac
+Rec -- UC_Ord
+Rec -- UC_Bus
+Rec -- UC_Abo
+Rec -- UC_Est
+Rec -- UC_Fin
+
+' Relaciones Laboratorista
+Lab -- UC_Bus
+Lab -- UC_Res
+Lab -- UC_Val
+Lab -- UC_Pru
+Lab -- UC_Ran
+Lab -- UC_Per
+Lab -- UC_Fec
+
+' Relaciones Administrador
+Adm -- UC_Usu
+Adm -- UC_Med
+Adm -- UC_Cre
+Adm -- UC_Aud
+Adm -- UC_Aut
+
+' Relaciones Medico
+Med ..> UC_Aut
+Med ..> UC_His
+
+' Includes y Extends
+UC_Ord ..> UC_Bus : <<include>>
+UC_Abo ..> UC_Bus : <<include>>
+UC_Ran ..> UC_Pru : <<extend>>
+UC_Env ..> UC_Aut : <<include>>
+
+' Otras conexiones cruzadas (según imagen)
+UC_Pac -- UC_Imp
+UC_Ord -- UC_Imp
+UC_Ord -- UC_Env
+UC_Res -- UC_Env
+@enduml

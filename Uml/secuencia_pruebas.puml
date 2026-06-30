@@ -1,0 +1,49 @@
+@startuml
+title Diagrama de Secuencia: Mantenimiento de Pruebas y Rangos
+
+actor Administrador
+participant ":UIPruebas" as UI
+participant ":PruebaService" as PS
+participant ":PruebaDAO" as PD
+participant ":BaseDatos" as BD
+
+Administrador -> UI : 1: crearPrueba(nombre, tipo, items[])
+activate UI
+
+UI -> PS : 2: registrarPrueba(prueba)
+activate PS
+
+PS -> PD : 3: insertar(prueba)
+activate PD
+
+PD -> BD : 4: INSERT prueba + items
+activate BD
+BD --> PD : 5: idPrueba
+deactivate BD
+
+deactivate PD
+deactivate PS
+
+Administrador -> UI : 6: agregarRangos(idPrueba, rangos)
+
+UI -> PS : 7: registrarRangos(rangos)
+activate PS
+
+PS -> PD : 8: insertarRangos(rangos)
+activate PD
+
+PD -> BD : 9: INSERT rangos_referencia
+activate BD
+BD --> PD : 10: ok
+deactivate BD
+
+PD --> PS : 11: rangos guardados
+deactivate PD
+
+PS --> UI : 12: confirmación
+deactivate PS
+
+UI --> Administrador : 13: "Prueba creada exitosamente"
+deactivate UI
+
+@enduml

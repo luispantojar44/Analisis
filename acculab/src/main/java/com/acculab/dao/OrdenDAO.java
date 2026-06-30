@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 public class OrdenDAO extends GenericBinaryDAO<Orden, String> {
 
     public OrdenDAO() {
-        super("data/ordenes.dat", Orden::getId);
+        super("data/ordenes.bin", Orden::getId);
     }
 
     public List<Orden> findByPaciente(Paciente paciente) {

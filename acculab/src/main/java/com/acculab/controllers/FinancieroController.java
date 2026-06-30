@@ -1,6 +1,8 @@
 package com.acculab.controllers;
 
 import com.acculab.dao.OrdenDAO;
+import com.acculab.dao.AbonoDAO;
+import com.acculab.models.Abono;
 import com.acculab.models.Orden;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -9,6 +11,8 @@ import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+
+import java.util.UUID;
 
 public class FinancieroController {
 
@@ -28,6 +32,7 @@ public class FinancieroController {
     @FXML private TextField txtNuevoAbono;
 
     private OrdenDAO ordenDAO;
+    private AbonoDAO abonoDAO;
     private ObservableList<Orden> listaOrdenes;
     private FilteredList<Orden> ordenesFiltradas;
     private Orden ordenSeleccionada = null;
@@ -35,6 +40,7 @@ public class FinancieroController {
     @FXML
     public void initialize() {
         ordenDAO = new OrdenDAO();
+        abonoDAO = new AbonoDAO();
         configurarTabla();
         cargarDatos();
         configurarBuscador();
@@ -136,9 +142,15 @@ public class FinancieroController {
                 return;
             }
 
-            // Actualizar abono
-            double abonoActualizado = ordenSeleccionada.getAbono() + nuevoAbono;
-            ordenSeleccionada.setAbono(abonoActualizado);
+            // Crear objeto Abono
+            String idAbono = "AB-" + UUID.randomUUID().toString().substring(0, 5).toUpperCase();
+            Abono nuevo = new Abono(idAbono, ordenSeleccionada.getId(), nuevoAbono);
+            
+            // Agregar a la orden
+            ordenSeleccionada.agregarAbono(nuevo);
+            
+            // Guardar en DAO
+            abonoDAO.save(nuevo);
             ordenDAO.update(ordenSeleccionada);
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION);

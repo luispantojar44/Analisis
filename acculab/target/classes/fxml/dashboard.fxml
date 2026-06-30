@@ -32,6 +32,8 @@
                   <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#abrirModuloLaboratorio" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-alignment: BASELINE_LEFT; -fx-font-size: 15px; -fx-cursor: hand;" text="🔬 Laboratorio" />
                   <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#abrirModuloFinanciero" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-alignment: BASELINE_LEFT; -fx-font-size: 15px; -fx-cursor: hand;" text="💰 Caja / Financiero" />
                   <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#abrirModuloPruebas" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-alignment: BASELINE_LEFT; -fx-font-size: 15px; -fx-cursor: hand;" text="⚙️ Catálogo Pruebas" />
+                  <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#abrirModuloMedicos" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-alignment: BASELINE_LEFT; -fx-font-size: 15px; -fx-cursor: hand;" text="👨‍⚕️ Médicos" />
+                  <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#abrirModuloUsuarios" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-alignment: BASELINE_LEFT; -fx-font-size: 15px; -fx-cursor: hand;" text="🛡️ Usuarios" />
                </children>
             </VBox>
             

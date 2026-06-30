@@ -1,15 +1,15 @@
 @startuml
-[*] --> PENDIENTE : Crear Nueva Orden
+[*] --> INGRESADA : Crear Orden (Recepcionista)
 
-PENDIENTE --> EN_PROCESO : Agregar/Modificar Resultados
-EN_PROCESO --> EN_PROCESO : Modificar Resultados
-EN_PROCESO --> FINALIZADA : Completar Todos los Resultados
+INGRESADA --> PENDIENTE : Abono Parcial Registrado
+PENDIENTE --> EN_PROCESO : Toma de Muestras iniciada
 
-PENDIENTE --> FINALIZADA : Ingresar Resultados Directamente
+INGRESADA --> EN_PROCESO : Abono Total Registrado
+PENDIENTE --> FINALIZADA : Resultados Ingresados (Batch)
+EN_PROCESO --> FINALIZADA : Resultados Ingresados (Batch)
 
-PENDIENTE --> ELIMINADA : Cancelar Orden (Soft Delete)
-EN_PROCESO --> ELIMINADA : Cancelar Orden (Soft Delete)
-FINALIZADA --> ELIMINADA : Cancelar Orden (Soft Delete)
+INGRESADA --> ELIMINADA : Cancelación
+PENDIENTE --> ELIMINADA : Cancelación
 
 FINALIZADA --> [*]
 ELIMINADA --> [*]

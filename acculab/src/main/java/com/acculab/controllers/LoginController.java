@@ -30,6 +30,13 @@ public class LoginController {
     public void setAuthService(AuthService authService) {
         this.authService = authService;
     }
+    
+    private AuthService getAuthService() {
+        if (this.authService == null) {
+            this.authService = new AuthService(new com.acculab.dao.UsuarioDAO());
+        }
+        return this.authService;
+    }
 
     @FXML
     private void handleLogin(ActionEvent event) {
@@ -41,7 +48,7 @@ public class LoginController {
             return;
         }
 
-        Usuario usuario = authService.login(username, password);
+        Usuario usuario = getAuthService().login(username, password);
 
         if (usuario != null) {
             lblError.setText("");

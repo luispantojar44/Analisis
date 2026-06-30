@@ -1,0 +1,70 @@
+@startuml
+title Diagrama de Secuencia: Ingresar Resultados y Emitir Reporte PDF
+
+actor Laboratorista
+participant ":UIResultados" as UI
+participant ":ResultadoService" as RS
+participant ":OrdenService" as OS
+participant ":ResultadoDAO" as RD
+participant ":ReporteService" as RepS
+participant ":GeneradorPDF" as PDF
+
+Laboratorista -> UI : 1: abrirOrdenPendiente(idOrden)
+activate UI
+
+UI -> RS : 2: obtenerEstructura(idOrden)
+activate RS
+
+RS -> OS : 3: listarPruebasOrden()
+activate OS
+OS --> RS : 4: pruebas (orden original)
+deactivate OS
+
+RS --> UI : 5: estructura formulario
+deactivate RS
+
+Laboratorista -> UI : 6: ingresar valores
+
+UI -> RS : 7: guardarResultados(map)
+activate RS
+
+RS -> RD : 8: INSERT/UPDATE resultados
+activate RD
+
+opt valor fuera de rango
+    note over RS, RD
+    marcar alerta
+    end note
+end
+
+RD --> RS : 9: ok
+deactivate RD
+
+RS -> OS : 10: cambiarEstado(REALIZADA)
+activate OS
+OS --> RS : 11: estado actualizado
+deactivate OS
+
+deactivate RS
+
+Laboratorista -> UI : 12: clickImprimir(plantilla)
+
+UI -> RepS : 13: generarReporte(idOrden, plantilla, conFirma)
+activate RepS
+
+note over RepS, PDF
+strategy = ReporteMembretado / Sin / Convenio
+end note
+
+RepS -> PDF : 14: render(datos)
+activate PDF
+PDF --> RepS : 15: byte[] PDF
+deactivate PDF
+
+RepS --> UI : 16: PDF generado
+deactivate RepS
+
+UI --> Laboratorista : 17: visualiza/descarga PDF
+deactivate UI
+
+@enduml

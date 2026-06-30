@@ -14,6 +14,7 @@ import java.util.UUID;
 
 public class PruebasController {
 
+    @FXML private TextField txtCodigo;
     @FXML private TextField txtNombre;
     @FXML private TextField txtUnidad;
     @FXML private TextField txtMinM;
@@ -111,6 +112,10 @@ public class PruebasController {
 
     private void cargarFormulario(Prueba p) {
         pruebaSeleccionada = p;
+        if (txtCodigo != null) {
+            txtCodigo.setText(p.getId());
+            txtCodigo.setDisable(true); // El código no se edita después de creado
+        }
         txtNombre.setText(p.getNombre());
         txtUnidad.setText(p.getUnidad());
         txtMinM.setText(String.valueOf(p.getRefMinMasculino()));
@@ -129,6 +134,11 @@ public class PruebasController {
     @FXML
     private void guardarPrueba(ActionEvent event) {
         try {
+            if (txtCodigo != null && txtCodigo.getText().trim().isEmpty()) {
+                mostrarAlerta("Campos vacíos", "El código es obligatorio.");
+                return;
+            }
+
             if (txtNombre.getText().trim().isEmpty() || txtUnidad.getText().trim().isEmpty() || txtPrecio.getText().trim().isEmpty()) {
                 mostrarAlerta("Campos vacíos", "El nombre, unidad y precio son obligatorios.");
                 return;
@@ -141,8 +151,15 @@ public class PruebasController {
             double precio = Double.parseDouble(txtPrecio.getText().trim());
 
             if (pruebaSeleccionada == null) {
-                String id = "PR-" + UUID.randomUUID().toString().substring(0, 4).toUpperCase();
-                Prueba nuevaPrueba = new Prueba(id, txtNombre.getText().trim(), txtUnidad.getText().trim(), minM, maxM, minF, maxF, precio);
+                String codigo = (txtCodigo != null) ? txtCodigo.getText().trim() : ("PR-" + UUID.randomUUID().toString().substring(0, 4).toUpperCase());
+                
+                // Buscar por código exacto como dice la secuencia
+                if (pruebaDAO.findById(codigo) != null) {
+                    mostrarAlerta("Código Duplicado", "Ya existe una prueba con el código: " + codigo);
+                    return;
+                }
+                
+                Prueba nuevaPrueba = new Prueba(codigo, txtNombre.getText().trim(), txtUnidad.getText().trim(), minM, maxM, minF, maxF, precio);
                 pruebaDAO.save(nuevaPrueba);
             } else {
                 pruebaSeleccionada.setNombre(txtNombre.getText().trim());
@@ -175,6 +192,10 @@ public class PruebasController {
     @FXML
     private void limpiarFormulario(ActionEvent event) {
         pruebaSeleccionada = null;
+        if (txtCodigo != null) {
+            txtCodigo.clear();
+            txtCodigo.setDisable(false);
+        }
         txtNombre.clear();
         txtUnidad.clear();
         txtMinM.clear();

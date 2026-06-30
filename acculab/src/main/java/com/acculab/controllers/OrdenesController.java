@@ -4,10 +4,12 @@ import com.acculab.dao.OrdenDAO;
 import com.acculab.dao.PacienteDAO;
 import com.acculab.dao.PerfilDAO;
 import com.acculab.dao.PruebaDAO;
+import com.acculab.dao.MedicoDAO;
 import com.acculab.models.Orden;
 import com.acculab.models.Paciente;
 import com.acculab.models.Perfil;
 import com.acculab.models.Prueba;
+import com.acculab.models.Medico;
 import com.acculab.services.OrdenService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -22,7 +24,7 @@ public class OrdenesController {
 
     @FXML private TextField txtBuscarPaciente;
     @FXML private ComboBox<Paciente> cbPacientes;
-    @FXML private TextField txtMedico;
+    @FXML private ComboBox<Medico> cbMedicos;
     
     @FXML private ComboBox<Prueba> cbPruebas;
     @FXML private Button btnAgregarPrueba;
@@ -39,6 +41,7 @@ public class OrdenesController {
     private PruebaDAO pruebaDAO;
     private PerfilDAO perfilDAO;
     private OrdenDAO ordenDAO;
+    private MedicoDAO medicoDAO;
     private OrdenService ordenService;
 
     private ObservableList<Prueba> pruebasEnOrden;
@@ -51,6 +54,7 @@ public class OrdenesController {
         pruebaDAO = new PruebaDAO();
         perfilDAO = new PerfilDAO();
         ordenDAO = new OrdenDAO();
+        medicoDAO = new MedicoDAO();
         ordenService = new OrdenService(ordenDAO);
 
         pruebasEnOrden = FXCollections.observableArrayList();
@@ -67,6 +71,7 @@ public class OrdenesController {
         
         cbPruebas.setItems(FXCollections.observableArrayList(pruebaDAO.findAll()));
         cbPerfiles.setItems(FXCollections.observableArrayList(perfilDAO.findAll()));
+        cbMedicos.setItems(FXCollections.observableArrayList(medicoDAO.findAllActivos()));
     }
 
     private void configurarBuscadorPaciente() {
@@ -154,7 +159,15 @@ public class OrdenesController {
         this.ordenEditando = orden;
         cbPacientes.setValue(orden.getPaciente());
         cbPacientes.setDisable(true); // No se puede cambiar el paciente
-        txtMedico.setText(orden.getMedicoSolicitante());
+        
+        // Tratar de seleccionar el medico si coincide el nombre
+        for(Medico m : cbMedicos.getItems()) {
+            if(m.toString().equals(orden.getMedicoSolicitante())) {
+                cbMedicos.setValue(m);
+                break;
+            }
+        }
+        
         pruebasEnOrden.setAll(orden.getPruebas());
         actualizarContador();
     }
@@ -162,7 +175,8 @@ public class OrdenesController {
     @FXML
     private void guardarOrden(ActionEvent event) {
         Paciente paciente = cbPacientes.getValue();
-        String medico = txtMedico.getText();
+        Medico medicoObj = cbMedicos.getValue();
+        String medico = (medicoObj != null) ? medicoObj.toString() : "";
 
         if (paciente == null || medico.isEmpty() || pruebasEnOrden.isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -173,16 +187,20 @@ public class OrdenesController {
         }
 
         double costoTotal = 0.0;
-        for (Prueba p : pruebasEnOrden) {
-            costoTotal += p.getPrecio();
-        }
+        
+        // Cumplimiento estricto del diagrama de secuencia_orden.png
+        java.util.List<String> pruebasIds = pruebasEnOrden.stream().map(Prueba::getId).collect(java.util.stream.Collectors.toList());
 
         if (ordenEditando == null) {
             String id = "ORD-" + UUID.randomUUID().toString().substring(0, 6).toUpperCase();
             Orden nuevaOrden = new Orden(id, paciente, medico);
             
-            for (Prueba p : pruebasEnOrden) {
-                nuevaOrden.addPrueba(p);
+            for (String pruebaId : pruebasIds) {
+                Prueba p = pruebaDAO.findById(pruebaId);
+                if (p != null) {
+                    nuevaOrden.addPrueba(p);
+                    costoTotal += p.getPrecio();
+                }
             }
             nuevaOrden.setCostoTotal(costoTotal);
             ordenDAO.save(nuevaOrden);
@@ -191,7 +209,15 @@ public class OrdenesController {
             limpiarFormulario();
         } else {
             ordenEditando.setMedicoSolicitante(medico);
-            ordenEditando.setPruebas(new java.util.ArrayList<>(pruebasEnOrden));
+            ordenEditando.getPruebas().clear();
+            
+            for (String pruebaId : pruebasIds) {
+                Prueba p = pruebaDAO.findById(pruebaId);
+                if (p != null) {
+                    ordenEditando.addPrueba(p);
+                    costoTotal += p.getPrecio();
+                }
+            }
             ordenEditando.setCostoTotal(costoTotal);
             ordenDAO.update(ordenEditando);
 
@@ -226,7 +252,7 @@ public class OrdenesController {
     @FXML
     private void limpiarFormulario() {
         cbPacientes.getSelectionModel().clearSelection();
-        txtMedico.clear();
+        cbMedicos.getSelectionModel().clearSelection();
         cbPruebas.getSelectionModel().clearSelection();
         cbPerfiles.getSelectionModel().clearSelection();
         pruebasEnOrden.clear();

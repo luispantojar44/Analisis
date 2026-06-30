@@ -5,6 +5,6 @@ import com.acculab.models.Perfil;
 public class PerfilDAO extends GenericBinaryDAO<Perfil, String> {
 
     public PerfilDAO() {
-        super("data/perfiles.dat", Perfil::getId);
+        super("data/perfiles.bin", Perfil::getId);
     }
 }

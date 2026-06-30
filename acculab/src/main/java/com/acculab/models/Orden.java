@@ -16,6 +16,7 @@ public class Orden implements Serializable {
     
     // Pruebas solicitadas (mantiene el orden)
     private List<Prueba> pruebas;
+    private List<Abono> abonos;
     // Resultados de las pruebas
     private List<Resultado> resultados;
     
@@ -30,6 +31,7 @@ public class Orden implements Serializable {
         this.fechaCreacion = LocalDateTime.now();
         this.estado = EstadoOrden.PENDIENTE;
         this.pruebas = new ArrayList<>();
+        this.abonos = new ArrayList<>();
         this.resultados = new ArrayList<>();
         this.costoTotal = 0.0;
         this.abono = 0.0;
@@ -50,6 +52,11 @@ public class Orden implements Serializable {
         return costoTotal - abono;
     }
 
+    public void agregarAbono(Abono a) {
+        this.abonos.add(a);
+        this.abono += a.getMonto();
+    }
+
     // Getters and setters
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
@@ -63,8 +70,15 @@ public class Orden implements Serializable {
     public void setEstado(EstadoOrden estado) { this.estado = estado; }
     public List<Prueba> getPruebas() { return pruebas; }
     public void setPruebas(List<Prueba> pruebas) { this.pruebas = pruebas; }
+    public List<Abono> getAbonos() { return abonos; }
+    public void setAbonos(List<Abono> abonos) { this.abonos = abonos; }
     public List<Resultado> getResultados() { return resultados; }
     public void setResultados(List<Resultado> resultados) { this.resultados = resultados; }
+    
+    public void agregarResultado(Resultado r) {
+        this.resultados.add(r);
+    }
+    
     public double getCostoTotal() { return costoTotal; }
     public void setCostoTotal(double costoTotal) { this.costoTotal = costoTotal; }
     public double getAbono() { return abono; }

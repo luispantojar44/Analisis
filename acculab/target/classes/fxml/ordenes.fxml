@@ -28,7 +28,7 @@
             </VBox>
             <VBox spacing="5.0">
                <Label styleClass="info-label" text="Médico Solicitante:" />
-               <TextField fx:id="txtMedico" promptText="Nombre del Médico" />
+               <ComboBox fx:id="cbMedicos" maxWidth="Infinity" promptText="Seleccionar Médico..." />
             </VBox>
          </VBox>
          

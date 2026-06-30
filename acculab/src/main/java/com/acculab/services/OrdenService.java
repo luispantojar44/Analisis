@@ -27,25 +27,19 @@ public class OrdenService {
     }
 
     public void capturarResultado(Orden orden, Prueba prueba, double valor, Paciente paciente) {
-        boolean fueraDeRango = false;
-        if (paciente.getSexo() == Paciente.Sexo.MASCULINO) {
-            if (valor < prueba.getRefMinMasculino() || valor > prueba.getRefMaxMasculino()) {
-                fueraDeRango = true;
-            }
-        } else {
-            if (valor < prueba.getRefMinFemenino() || valor > prueba.getRefMaxFemenino()) {
-                fueraDeRango = true;
-            }
-        }
-
-        Resultado resultado = new Resultado(prueba, valor, fueraDeRango);
-        orden.addResultado(resultado);
+        Resultado resultado = new Resultado(prueba, valor);
+        resultado.validarRango(paciente);
+        orden.getResultados().add(resultado);
 
         // Si todas las pruebas tienen resultados, se podría cambiar el estado automáticamente
         if (orden.getResultados().size() == orden.getPruebas().size()) {
             orden.setEstado(EstadoOrden.FINALIZADA);
         }
         
+        ordenDAO.update(orden);
+    }
+    
+    public void actualizarOrden(Orden orden) {
         ordenDAO.update(orden);
     }
 
